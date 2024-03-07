@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useMutation } from '@apollo/client';
+import { REMOVE_BOOK } from './mutations';
+
 import {
   Container,
   Card,
@@ -51,13 +53,11 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await deleteBook(bookId, token);
+      const response = await removeBook({
+        variables: { bookId }
+      });
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const updatedUser = await response.json();
+      const updatedUser = response.data.removeBook;
       setUserData(updatedUser);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
